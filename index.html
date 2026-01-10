@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roue des Bienfaits - Février en Fête</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #faf5ff 0%, #fce7f3 50%, #fef3c7 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            opacity: 0.2;
+            pointer-events: none;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #9333ea, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .info-box {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 2px solid #e9d5ff;
+            margin-bottom: 1rem;
+        }
+
+        .info-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .info-text {
+            color: #4b5563;
+            font-size: 1.125rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .badge {
+            padding: 0.5rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .badge-pink { background: #fce7f3; color: #be185d; }
+        .badge-yellow { background: #fef3c7; color: #92400e; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+        .badge-gray { background: #f3f4f6; color: #1f2937; }
+
+        .validity {
+            color: #9333ea;
+            font-weight: bold;
+            font-size: 0.875rem;
+            margin-top: 0.75rem;
+        }
+
+        .wheel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .pointer-top {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .arrow-top {
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-top: 50px solid #ef4444;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            position: relative;
+        }
+
+        .arrow-top-dot {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .wheel-wrapper {
+            position: relative;
+            width: 384px;
+            height: 384px;
+            margin-bottom: 2rem;
+        }
+
+        .wheel-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: linear-gradient(to right, #c084fc, #f9a8d4, #fde047);
+            filter: blur(40px);
+            opacity: 0.3;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+        }
+
+        .wheel {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            background: conic-gradient(from 0deg, #FFD700 0deg 90deg, #FF1493 90deg 180deg, #DC143C 180deg 270deg, #1a1a1a 270deg 360deg);
+        }
+
+        .wheel-border {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 8px solid white;
+            pointer-events: none;
+        }
+
+        .wheel-separator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 50%;
+            background: white;
+            opacity: 0.6;
+            transform-origin: top;
+        }
+
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #c084fc, #f9a8d4);
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid white;
+            z-index: 10;
+            font-size: 2.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .wheel-segment {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 2px;
+            transform-origin: left;
+            pointer-events: none;
+        }
+
+        .segment-content {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+
+        .segment-emoji {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+        }
+
+        .segment-prize {
+            font-weight: 900;
+            font-size: 1.5rem;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.5), 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        .pointer-right {
+            display: none;
+        }
+
+        .spin-button {
+            padding: 1.25rem 3rem;
+            font-size: 1.5rem;
+            font-weight: 900;
+            border-radius: 9999px;
+            border: none;
+            background: linear-gradient(to right, #9333ea, #ec4899, #9333ea);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spin-button:not(:disabled):hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .spin-button:disabled {
+            background: #d1d5db;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+
+        .luck-text {
+            margin-top: 1rem;
+            font-size: 1.25rem;
+            color: #9333ea;
+            font-weight: bold;
+            animation: bounce 1s infinite;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            position: relative;
+            animation: bounceIn 0.6s;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(to right, #9333ea, #ec4899, #fbbf24);
+        }
+
+        .modal-emoji {
+            font-size: 5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            animation: bounceEmoji 1s 3;
+        }
+
+        @keyframes bounceEmoji {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .modal-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-prize {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .modal-message {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #374151;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-description {
+            font-size: 1.125rem;
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .modal-instructions {
+            background: linear-gradient(to right, #faf5ff, #fce7f3);
+            border: 2px solid #e9d5ff;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .instruction-title {
+            font-size: 1rem;
+            color: #6b21a8;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .instruction-text {
+            font-size: 0.875rem;
+            color: #7c3aed;
+        }
+
+        .instruction-validity {
+            font-size: 0.75rem;
+            color: #9333ea;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .reset-button {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(to right, #9333ea, #ec4899);
+            color: white;
+            font-size: 1.125rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .reset-button:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            text-align: center;
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e9d5ff;
+        }
+
+        .footer-title {
+            font-weight: bold;
+            color: #9333ea;
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-text {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .signature {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #faf5ff, #fce7f3);
+            border-radius: 0.75rem;
+            border: 1px solid #e9d5ff;
+        }
+
+        .signature-text {
+            font-size: 0.875rem;
+            color: #9333ea;
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        @media (max-width: 640px) {
+            .title { 
+                font-size: 2rem; 
+            }
+            
+            .info-box {
+                padding: 1rem;
+            }
+            
+            .info-title {
+                font-size: 1.25rem;
+            }
+            
+            .info-text {
+                font-size: 1rem;
+            }
+            
+            .badges {
+                gap: 0.375rem;
+            }
+            
+            .badge {
+                font-size: 0.75rem;
+                padding: 0.375rem 0.625rem;
+            }
+            
+            .wheel-wrapper { 
+                width: 280px; 
+                height: 280px; 
+            }
+            
+            .wheel-center {
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+            }
+            
+            .segment-emoji {
+                font-size: 2rem;
+            }
+            
+            .segment-prize {
+                font-size: 1.25rem;
+            }
+            
+            .spin-button { 
+                font-size: 1.125rem; 
+                padding: 1rem 2rem; 
+            }
+            
+            .luck-text {
+                font-size: 1rem;
+            }
+            
+            .pointer-right {
+                right: -40px;
+            }
+            
+            .arrow-top {
+                border-left: 20px solid transparent;
+                border-right: 20px solid transparent;
+                border-top: 40px solid #ef4444;
+            }
+            
+            .modal-content {
+                padding: 1.5rem;
+            }
+            
+            .modal-emoji {
+                font-size: 4rem;
+            }
+            
+            .modal-title {
+                font-size: 2rem;
+            }
+            
+            .modal-prize {
+                font-size: 2.5rem;
+                padding: 0.75rem 1.5rem;
+            }
+            
+            .modal-message {
+                font-size: 1.25rem;
+            }
+            
+            .modal-description {
+                font-size: 1rem;
+            }
+            
+            .modal-instructions {
+                padding: 1rem;
+            }
+            
+            .footer {
+                padding: 0.75rem;
+            }
+            
+            .footer-text {
+                font-size: 0.75rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title { 
+                font-size: 1.75rem; 
+            }
+            
+            .wheel-wrapper { 
+                width: 240px; 
+                height: 240px; 
+            }
+            
+            .wheel-center {
+                width: 50px;
+                height: 50px;
+                font-size: 1.75rem;
+            }
+            
+            .segment-emoji {
+                font-size: 1.75rem;
+            }
+            
+            .segment-prize {
+                font-size: 1.125rem;
+            }
+            
+            .spin-button { 
+                font-size: 1rem; 
+                padding: 0.875rem 1.75rem; 
+            }
+            
+            .pointer-right {
+                right: -35px;
+            }
+            
+            .arrow-top {
+                border-left: 18px solid transparent;
+                border-right: 18px solid transparent;
+                border-top: 36px solid #ef4444;
+            }
+            
+            .arrow-top-dot {
+                width: 10px;
+                height: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating emojis -->
+    <div class="floating-emoji" style="top: 5%; left: 5%;">✨</div>
+    <div class="floating-emoji" style="top: 15%; right: 10%; animation-delay: 0.5s;">💝</div>
+    <div class="floating-emoji" style="bottom: 20%; left: 10%; animation-delay: 1s;">🥞</div>
+    <div class="floating-emoji" style="bottom: 10%; right: 15%; animation-delay: 1.5s;">🐉</div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="title">🎊 Février en Fête chez Mme Suh 🎊</h1>
+            
+            <div class="info-box">
+                <h2 class="info-title">Tentez votre chance et gagnez jusqu'à -30% !</h2>
+                <p class="info-text"><strong>Comment jouer ?</strong> Cliquez sur "Tourner la roue" et découvrez votre réduction exclusive</p>
+                <div class="badges">
+                    <span class="badge badge-pink">💕 -30% St-Valentin</span>
+                    <span class="badge badge-yellow">🥞 -10% Chandeleur</span>
+                    <span class="badge badge-red">🐉 -10€ Nouvel An</span>
+                    <span class="badge badge-gray">😢 Cadeau de consolation</span>
+                </div>
+                <p class="validity">⏰ Offres valables uniquement en février 2025</p>
+            </div>
+        </div>
+
+        <!-- Wheel -->
+        <div class="wheel-container">
+            <div class="pointer-top">
+                <div class="arrow-top">
+                    <div class="arrow-top-dot"></div>
+                </div>
+            </div>
+
+            <div class="wheel-wrapper">
+                <div class="wheel-glow"></div>
+                <div class="wheel" id="wheel">
+                    <div class="wheel-border"></div>
+                    
+                    <!-- Separators -->
+                    <div class="wheel-separator" style="transform: rotate(0deg);"></div>
+                    <div class="wheel-separator" style="transform: rotate(90deg);"></div>
+                    <div class="wheel-separator" style="transform: rotate(180deg);"></div>
+                    <div class="wheel-separator" style="transform: rotate(270deg);"></div>
+
+                    <!-- Segments -->
+                    <div class="wheel-segment" style="transform: rotate(0deg);" data-index="0">
+                        <div class="segment-content" style="color: #6B3410; transform: translate(calc(-50% + -15px), calc(0% + -125px)) rotate(0deg);">
+                            <div class="segment-emoji">🥞</div>
+                            <div class="segment-prize">-10%</div>
+                        </div>
+                    </div>
+                    <div class="wheel-segment" style="transform: rotate(90deg);" data-index="1">
+                        <div class="segment-content" style="color: #FFFFFF; transform: translate(calc(-50% + -15px), calc(0% + -125px)) rotate(-90deg);">
+                            <div class="segment-emoji">💕</div>
+                            <div class="segment-prize">-30%</div>
+                        </div>
+                    </div>
+                    <div class="wheel-segment" style="transform: rotate(180deg);" data-index="2">
+                        <div class="segment-content" style="color: #FFD700; transform: translate(calc(-50% + -25px), calc(0% + -125px)) rotate(-180deg);">
+                            <div class="segment-emoji">🐉</div>
+                            <div class="segment-prize">-10€</div>
+                        </div>
+                    </div>
+                    <div class="wheel-segment" style="transform: rotate(270deg);" data-index="3">
+                        <div class="segment-content" style="color: #FFD700; transform: translate(calc(-50% + -10px), calc(0% + -100px)) rotate(-270deg);">
+                            <div class="segment-emoji">😢</div>
+                            <div class="segment-prize"></div>
+                        </div>
+                    </div>
+
+                    <div class="wheel-center">✨</div>
+                </div>
+
+                <div class="pointer-right">
+                    <div class="arrow">
+                        <div class="arrow-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="spin-button" id="spinButton" onclick="spinWheel()">
+                🎯 TOURNER LA ROUE
+            </button>
+            <div class="luck-text" id="luckText" style="display: none;">
+                Bonne chance ! 🍀✨
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p class="footer-title">✨ Célébrons Février avec Vous</p>
+            <p class="footer-text">Un moment de détente vous attend 🧘‍♀️💆‍♀️</p>
+        </div>
+
+        <!-- Signature -->
+        <div class="signature">
+            <p class="signature-text">zenattitude59</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-confetti" id="confetti"></div>
+            <div class="modal-emoji" id="modalEmoji">🎁</div>
+            <h2 class="modal-title" id="modalTitle">🎉 BRAVO !</h2>
+            <div style="text-align: center;">
+                <div class="modal-prize" id="modalPrize">-10%</div>
+            </div>
+            <h3 class="modal-message" id="modalMessage">Message</h3>
+            <p class="modal-description" id="modalDescription">Description</p>
+            <div class="modal-instructions" id="modalInstructions">
+                <p class="instruction-title" id="instructionTitle">💜 Comment utiliser votre réduction ?</p>
+                <p class="instruction-text">Prenez une capture d'écran et présentez-la lors de votre réservation</p>
+                <p class="instruction-validity">⏰ Valable jusqu'au 28 février 2025</p>
+            </div>
+            <button class="reset-button" onclick="reset()">↻ Rejouer</button>
+        </div>
+    </div>
+
+    <script>
+        const segments = [
+            {
+                id: 1,
+                emoji: '🥞',
+                prize: '-10%',
+                color: '#FFD700',
+                textColor: '#6B3410',
+                message: '🥞 Offre Chandeleur',
+                description: 'La douceur de la Chandeleur : -10% sur votre massage bien-être',
+                offsetX: -15,
+                offsetY: -125
+            },
+            {
+                id: 2,
+                emoji: '💕',
+                prize: '-30%',
+                color: '#FF1493',
+                textColor: '#FFFFFF',
+                message: '💕 Spécial Saint-Valentin',
+                description: 'Tombez amoureux de nos soins : -30% sur tous nos massages',
+                offsetX: -15,
+                offsetY: -125
+            },
+            {
+                id: 3,
+                emoji: '🐉',
+                prize: '-10€',
+                color: '#DC143C',
+                textColor: '#FFD700',
+                message: '🐉 Nouvel An Chinois',
+                description: 'L\'année du Serpent de Bois : -10€ pour recharger vos énergies',
+                offsetX: -25,
+                offsetY: -125
+            },
+            {
+                id: 4,
+                emoji: '😢',
+                prize: '',
+                color: '#1a1a1a',
+                textColor: '#FFD700',
+                message: 'Pas de chance cette fois...',
+                description: 'Mais ne partez pas les mains vides ! Un petit cadeau de consolation vous attend au salon',
+                offsetX: -10,
+                offsetY: -100
+            }
+        ];
+
+        let rotation = 0;
+        let isSpinning = false;
+        let hasSpun = false;
+
+        function spinWheel() {
+            if (isSpinning || hasSpun) return;
+
+            isSpinning = true;
+            document.getElementById('spinButton').disabled = true;
+            document.getElementById('spinButton').textContent = '🎰 Rotation en cours...';
+            document.getElementById('luckText').style.display = 'block';
+
+            const selectedIndex = Math.floor(Math.random() * segments.length);
+            const baseRotation = 360 * 8;
+            const segmentAngle = 360 / segments.length;
+            const targetAngle = segmentAngle * selectedIndex + segmentAngle / 2;
+            const finalRotation = baseRotation + (360 - targetAngle);
+
+            rotation = finalRotation;
+            const wheel = document.getElementById('wheel');
+            wheel.style.transform = `rotate(${rotation}deg)`;
+
+            // Update segment content rotations
+            const segmentContents = document.querySelectorAll('.segment-content');
+            segmentContents.forEach((content, index) => {
+                const angle = (360 / segments.length) * index;
+                content.style.transform = `translate(calc(-50% + ${segments[index].offsetX}px), calc(0% + ${segments[index].offsetY}px)) rotate(${-angle - rotation}deg)`;
+            });
+
+            setTimeout(() => {
+                isSpinning = false;
+                setTimeout(() => {
+                    showResult(segments[selectedIndex]);
+                    hasSpun = true;
+                }, 800);
+            }, 5000);
+        }
+
+        function showResult(result) {
+            document.getElementById('luckText').style.display = 'none';
+            document.getElementById('spinButton').textContent = '✓ Déjà joué';
+
+            const modal = document.getElementById('modal');
+            const confetti = document.getElementById('confetti');
+            const modalTitle = document.getElementById('modalTitle');
+            const instructionTitle = document.getElementById('instructionTitle');
+
+            document.getElementById('modalEmoji').textContent = result.emoji;
+            document.getElementById('modalPrize').textContent = result.prize;
+            document.getElementById('modalPrize').style.backgroundColor = result.color;
+            document.getElementById('modalPrize').style.color = result.textColor;
+            document.getElementById('modalMessage').textContent = result.message;
+            document.getElementById('modalDescription').textContent = result.description;
+
+            if (result.id === 4) {
+                confetti.style.display = 'none';
+                modalTitle.style.display = 'none';
+                instructionTitle.style.display = 'none';
+            } else {
+                confetti.style.display = 'block';
+                modalTitle.style.display = 'block';
+                instructionTitle.style.display = 'block';
+            }
+
+            modal.classList.add('show');
+        }
+
+        function reset() {
+            rotation = 0;
+            isSpinning = false;
+            hasSpun = false;
+
+            const wheel = document.getElementById('wheel');
+            wheel.style.transition = 'none';
+            wheel.style.transform = 'rotate(0deg)';
+
+            const segmentContents = document.querySelectorAll('.segment-content');
+            segmentContents.forEach((content, index) => {
+                const angle = (360 / segments.length) * index;
+                content.style.transition = 'none';
+                content.style.transform = `translate(calc(-50% + ${segments[index].offsetX}px), calc(0% + ${segments[index].offsetY}px)) rotate(${-angle}deg)`;
+            });
+
+            setTimeout(() => {
+                wheel.style.transition = 'transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+                segmentContents.forEach(content => {
+                    content.style.transition = 'transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+                });
+            }, 50);
+
+            document.getElementById('modal').classList.remove('show');
+            document.getElementById('spinButton').disabled = false;
+            document.getElementById('spinButton').textContent = '🎯 TOURNER LA ROUE';
+        }
+    </script>
+</body>
+</html>
