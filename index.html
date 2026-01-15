@@ -93,6 +93,15 @@
             border-radius: 9999px;
             font-weight: 600;
             font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .badge img {
+            width: 1.25rem;
+            height: 1.25rem;
+            object-fit: contain;
         }
 
         .badge-pink { background: #fce7f3; color: #be185d; }
@@ -234,14 +243,37 @@
         }
 
         .segment-emoji {
-            font-size: 2.5rem;
+            font-size: 3rem;
             filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+        }
+
+        .segment-emoji img {
+            width: 4rem;
+            height: 4rem;
+            object-fit: contain;
+        }
+
+        .segment-emoji img[src="coeur.png"] {
+            width: 7.5rem;
+            height: 7.5rem;
         }
 
         .segment-prize {
             font-weight: 900;
             font-size: 1.5rem;
             text-shadow: 0 2px 6px rgba(0,0,0,0.5), 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        .segment-content[style*="-150px"] .segment-prize {
+            margin-top: -1rem;
+        }
+
+        .segment-content[style*="-130px"] .segment-prize {
+            margin-top: -1rem;
+        }
+
+        .crepe-segment .segment-prize {
+            margin-top: -1rem;
         }
 
         .pointer-right {
@@ -280,6 +312,11 @@
             color: #9333ea;
             font-weight: bold;
             animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .modal {
@@ -337,6 +374,13 @@
             animation: bounceEmoji 1s 3;
         }
 
+        .modal-emoji img {
+            width: 5rem;
+            height: 5rem;
+            object-fit: contain;
+            display: inline-block;
+        }
+
         @keyframes bounceEmoji {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
@@ -366,6 +410,16 @@
             color: #374151;
             text-align: center;
             margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .modal-message img {
+            width: 1.5rem;
+            height: 1.5rem;
+            object-fit: contain;
         }
 
         .modal-description {
@@ -619,12 +673,12 @@
             <h1 class="title">🎊 Février en Fête 🎊</h1>
             
             <div class="info-box">
-                <h2 class="info-title">Tentez votre chance et gagnez jusqu'à -30% !</h2>
+                <h2 class="info-title">Tentez votre chance et gagnez jusqu'à -30€ !</h2>
                 <p class="info-text"><strong>Comment jouer ?</strong> Cliquez sur "Tourner la roue" et découvrez votre réduction exclusive</p>
                 <div class="badges">
-                    <span class="badge badge-pink">💕 -30% St-Valentin</span>
-                    <span class="badge badge-yellow">🥞 -10% Chandeleur</span>
-                    <span class="badge badge-red">🐉 -10€ Nouvel An</span>
+                    <span class="badge badge-red"><img src="cheval.png" alt="Cheval"> -30€ Nouvel An</span>
+                    <span class="badge badge-pink"><img src="coeur.png" alt="Coeur"> -20€ St-Valentin</span>
+                    <span class="badge badge-yellow"><img src="crepe.png" alt="Crêpe"> -10€ Chandeleur</span>
                     <span class="badge badge-gray">😢 Cadeau de consolation</span>
                 </div>
                 <p class="validity">⏰ Offres valables uniquement en février 2025</p>
@@ -652,21 +706,21 @@
 
                     <!-- Segments -->
                     <div class="wheel-segment" style="transform: rotate(0deg);" data-index="0">
-                        <div class="segment-content" style="color: #6B3410; transform: translate(calc(-50% + -15px), calc(0% + -125px)) rotate(0deg);">
-                            <div class="segment-emoji">🥞</div>
-                            <div class="segment-prize">-10%</div>
+                        <div class="segment-content crepe-segment" style="color: #6B3410; transform: translate(calc(-50% + -15px), calc(0% + -125px)) rotate(0deg);">
+                            <div class="segment-emoji"><img src="crepe.png" alt="Crêpe"></div>
+                            <div class="segment-prize">-10€</div>
                         </div>
                     </div>
                     <div class="wheel-segment" style="transform: rotate(90deg);" data-index="1">
-                        <div class="segment-content" style="color: #FFFFFF; transform: translate(calc(-50% + -15px), calc(0% + -125px)) rotate(-90deg);">
-                            <div class="segment-emoji">💕</div>
-                            <div class="segment-prize">-30%</div>
+                        <div class="segment-content" style="color: #FFFFFF; transform: translate(calc(-50% + -15px), calc(0% + -150px)) rotate(-90deg);">
+                            <div class="segment-emoji"><img src="coeur.png" alt="Coeur"></div>
+                            <div class="segment-prize">-20€</div>
                         </div>
                     </div>
                     <div class="wheel-segment" style="transform: rotate(180deg);" data-index="2">
-                        <div class="segment-content" style="color: #FFD700; transform: translate(calc(-50% + -25px), calc(0% + -125px)) rotate(-180deg);">
-                            <div class="segment-emoji">🧧</div>
-                            <div class="segment-prize">-10€</div>
+                        <div class="segment-content" style="color: #FFD700; transform: translate(calc(-50% + -25px), calc(0% + -130px)) rotate(-180deg);">
+                            <div class="segment-emoji"><img src="cheval.png" alt="Cheval"></div>
+                            <div class="segment-prize">-30€</div>
                         </div>
                     </div>
                     <div class="wheel-segment" style="transform: rotate(270deg);" data-index="3">
@@ -713,7 +767,7 @@
             <div class="modal-emoji" id="modalEmoji">🎁</div>
             <h2 class="modal-title" id="modalTitle">🎉 BRAVO !</h2>
             <div style="text-align: center;">
-                <div class="modal-prize" id="modalPrize">-10%</div>
+                <div class="modal-prize" id="modalPrize">-10€</div>
             </div>
             <h3 class="modal-message" id="modalMessage">Message</h3>
             <p class="modal-description" id="modalDescription">Description</p>
@@ -731,35 +785,35 @@
             {
                 id: 1,
                 emoji: '🥞',
-                prize: '-10%',
+                prize: '-10€',
                 color: '#FFD700',
                 textColor: '#6B3410',
-                message: '🥞 Offre Chandeleur',
-                description: 'La douceur de la Chandeleur : -10% sur votre massage bien-être',
+                message: '<img src="crepe.png" alt="Crêpe"> Offre Chandeleur',
+                description: 'La douceur de la Chandeleur : -10€ sur votre massage bien-être',
                 offsetX: -15,
                 offsetY: -125
             },
             {
                 id: 2,
                 emoji: '💕',
-                prize: '-30%',
+                prize: '-20€',
                 color: '#FF1493',
                 textColor: '#FFFFFF',
-                message: '💕 Spécial Saint-Valentin',
-                description: 'Tombez amoureux de nos soins : -30% sur tous nos massages',
+                message: '<img src="coeur.png" alt="Coeur"> Spécial Saint-Valentin',
+                description: 'Tombez amoureux de nos soins : -20€ sur tous nos massages',
                 offsetX: -15,
-                offsetY: -125
+                offsetY: -150
             },
             {
                 id: 3,
-                emoji: '🧧',
-                prize: '-10€',
+                emoji: '🐎',
+                prize: '-30€',
                 color: '#DC143C',
                 textColor: '#FFD700',
-                message: '🎠🔥 Nouvel An Chinois',
-                description: 'L\'année du Cheval de Feu : -10€ pour recharger vos énergies',
+                message: '<img src="cheval.png" alt="Cheval"> Nouvel An Chinois',
+                description: 'L\'année du Cheval de Feu : -30€ pour recharger vos énergies',
                 offsetX: -25,
-                offsetY: -125
+                offsetY: -130
             },
             {
                 id: 4,
@@ -820,12 +874,23 @@
             const confetti = document.getElementById('confetti');
             const modalTitle = document.getElementById('modalTitle');
             const instructionTitle = document.getElementById('instructionTitle');
+            const modalEmojiElement = document.getElementById('modalEmoji');
 
-            document.getElementById('modalEmoji').textContent = result.emoji;
+            // Handle emoji display (use images for crepe, coeur and cheval, emoji for others)
+            if (result.id === 1) {
+                modalEmojiElement.innerHTML = '<img src="crepe.png" alt="Crêpe">';
+            } else if (result.id === 2) {
+                modalEmojiElement.innerHTML = '<img src="coeur.png" alt="Coeur">';
+            } else if (result.id === 3) {
+                modalEmojiElement.innerHTML = '<img src="cheval.png" alt="Cheval">';
+            } else {
+                modalEmojiElement.textContent = result.emoji;
+            }
+
             document.getElementById('modalPrize').textContent = result.prize;
             document.getElementById('modalPrize').style.backgroundColor = result.color;
             document.getElementById('modalPrize').style.color = result.textColor;
-            document.getElementById('modalMessage').textContent = result.message;
+            document.getElementById('modalMessage').innerHTML = result.message;
             document.getElementById('modalDescription').textContent = result.description;
 
             if (result.id === 4) {
