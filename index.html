@@ -457,66 +457,6 @@
             margin-top: 0.5rem;
         }
 
-        .reset-button {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            background: linear-gradient(to right, #9333ea, #ec4899);
-            color: white;
-            font-size: 1.125rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 9999px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: all 0.3s;
-        }
-
-        .reset-button:hover {
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            transform: translateY(-2px);
-        }
-
-        .already-played {
-            text-align: center;
-            padding: 2rem;
-            background: linear-gradient(135deg, #faf5ff, #fce7f3);
-            border-radius: 1rem;
-            border: 2px solid #e9d5ff;
-            margin-bottom: 2rem;
-        }
-
-        .already-played h2 {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #9333ea;
-            margin-bottom: 1rem;
-        }
-
-        .already-played p {
-            font-size: 1.125rem;
-            color: #6b7280;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .view-result-button {
-            padding: 1rem 2rem;
-            background: linear-gradient(to right, #9333ea, #ec4899);
-            color: white;
-            font-size: 1.25rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 9999px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: all 0.3s;
-        }
-
-        .view-result-button:hover {
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            transform: translateY(-2px) scale(1.05);
-        }
-
         .footer {
             text-align: center;
             background: white;
@@ -727,8 +667,7 @@
         </div>
 
         <!-- Wheel -->
-        <div class="wheel-container" id="wheelContainer">
-            <div id="gameContent">
+        <div class="wheel-container">
             <div class="pointer-top">
                 <div class="arrow-top">
                     <div class="arrow-top-dot"></div>
@@ -788,7 +727,6 @@
             <div class="luck-text" id="luckText" style="display: none;">
                 Bonne chance ! 🍀✨
             </div>
-            </div>
         </div>
 
         <!-- Footer -->
@@ -823,6 +761,8 @@
     </div>
 
     <script>
+        const STORAGE_KEY = 'zen_massage_wheel_played';
+        
         const segments = [
             {
                 id: 1,
@@ -874,29 +814,22 @@
         let isSpinning = false;
         let hasSpun = false;
 
-        // Check if user has already played
+        // Vérifier au chargement si l'utilisateur a déjà joué
         function checkIfAlreadyPlayed() {
-            const savedResult = localStorage.getItem('roueBienfaitsResult');
-            if (savedResult) {
-                const result = JSON.parse(savedResult);
-                document.getElementById('alreadyPlayedMessage').style.display = 'none';
-                document.getElementById('gameContent').style.display = 'none';
-                
-                // Show the saved result immediately
-                setTimeout(() => {
+            const savedData = localStorage.getItem(STORAGE_KEY);
+            if (savedData) {
+                const { resultId } = JSON.parse(savedData);
+                const result = segments.find(s => s.id === resultId);
+                if (result) {
+                    hasSpun = true;
+                    // Désactiver le bouton immédiatement
+                    document.getElementById('spinButton').disabled = true;
+                    document.getElementById('spinButton').textContent = '✓ Déjà joué';
+                    // Afficher directement la popup avec le résultat sauvegardé
                     showResult(result, true);
-                }, 500);
-                return true;
+                }
             }
-            return false;
         }
-
-        // Initialize game on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            if (!checkIfAlreadyPlayed()) {
-                document.getElementById('gameContent').style.display = 'block';
-            }
-        });
 
         function spinWheel() {
             if (isSpinning || hasSpun) return;
@@ -926,20 +859,26 @@
             setTimeout(() => {
                 isSpinning = false;
                 setTimeout(() => {
-                    const selectedResult = segments[selectedIndex];
-                    // Save the result in localStorage
-                    localStorage.setItem('roueBienfaitsResult', JSON.stringify(selectedResult));
-                    showResult(selectedResult);
+                    // Sauvegarder le résultat AVANT d'afficher
+                    saveResult(segments[selectedIndex]);
+                    showResult(segments[selectedIndex], false);
                     hasSpun = true;
                 }, 800);
             }, 5000);
         }
 
-        function showResult(result, isReturningUser = false) {
-            if (!isReturningUser) {
-                document.getElementById('luckText').style.display = 'none';
-                document.getElementById('spinButton').textContent = '✓ Déjà joué';
-            }
+        // Sauvegarder le résultat dans localStorage
+        function saveResult(result) {
+            const data = {
+                resultId: result.id,
+                playedAt: new Date().toISOString()
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function showResult(result, isReload = false) {
+            document.getElementById('luckText').style.display = 'none';
+            document.getElementById('spinButton').textContent = '✓ Déjà joué';
 
             const modal = document.getElementById('modal');
             const confetti = document.getElementById('confetti');
@@ -977,33 +916,8 @@
             modal.classList.add('show');
         }
 
-        function reset() {
-            rotation = 0;
-            isSpinning = false;
-            hasSpun = false;
-
-            const wheel = document.getElementById('wheel');
-            wheel.style.transition = 'none';
-            wheel.style.transform = 'rotate(0deg)';
-
-            const segmentContents = document.querySelectorAll('.segment-content');
-            segmentContents.forEach((content, index) => {
-                const angle = (360 / segments.length) * index;
-                content.style.transition = 'none';
-                content.style.transform = `translate(calc(-50% + ${segments[index].offsetX}px), calc(0% + ${segments[index].offsetY}px)) rotate(${-angle}deg)`;
-            });
-
-            setTimeout(() => {
-                wheel.style.transition = 'transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
-                segmentContents.forEach(content => {
-                    content.style.transition = 'transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
-                });
-            }, 50);
-
-            document.getElementById('modal').classList.remove('show');
-            document.getElementById('spinButton').disabled = false;
-            document.getElementById('spinButton').textContent = '🎯 TOURNER LA ROUE';
-        }
+        // Lancer la vérification au chargement de la page
+        document.addEventListener('DOMContentLoaded', checkIfAlreadyPlayed);
     </script>
 </body>
 </html>
