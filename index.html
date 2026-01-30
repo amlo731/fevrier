@@ -476,6 +476,47 @@
             transform: translateY(-2px);
         }
 
+        .already-played {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #faf5ff, #fce7f3);
+            border-radius: 1rem;
+            border: 2px solid #e9d5ff;
+            margin-bottom: 2rem;
+        }
+
+        .already-played h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #9333ea;
+            margin-bottom: 1rem;
+        }
+
+        .already-played p {
+            font-size: 1.125rem;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .view-result-button {
+            padding: 1rem 2rem;
+            background: linear-gradient(to right, #9333ea, #ec4899);
+            color: white;
+            font-size: 1.25rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .view-result-button:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transform: translateY(-2px) scale(1.05);
+        }
+
         .footer {
             text-align: center;
             background: white;
@@ -686,7 +727,8 @@
         </div>
 
         <!-- Wheel -->
-        <div class="wheel-container">
+        <div class="wheel-container" id="wheelContainer">
+            <div id="gameContent">
             <div class="pointer-top">
                 <div class="arrow-top">
                     <div class="arrow-top-dot"></div>
@@ -746,6 +788,7 @@
             <div class="luck-text" id="luckText" style="display: none;">
                 Bonne chance ! 🍀✨
             </div>
+            </div>
         </div>
 
         <!-- Footer -->
@@ -776,7 +819,6 @@
                 <p class="instruction-text">Prenez une capture d'écran et présentez-la lors de votre réservation</p>
                 <p class="instruction-validity">⏰ Valable jusqu'au 28 février 2025</p>
             </div>
-            <button class="reset-button" onclick="reset()">↻ Rejouer</button>
         </div>
     </div>
 
@@ -832,6 +874,30 @@
         let isSpinning = false;
         let hasSpun = false;
 
+        // Check if user has already played
+        function checkIfAlreadyPlayed() {
+            const savedResult = localStorage.getItem('roueBienfaitsResult');
+            if (savedResult) {
+                const result = JSON.parse(savedResult);
+                document.getElementById('alreadyPlayedMessage').style.display = 'none';
+                document.getElementById('gameContent').style.display = 'none';
+                
+                // Show the saved result immediately
+                setTimeout(() => {
+                    showResult(result, true);
+                }, 500);
+                return true;
+            }
+            return false;
+        }
+
+        // Initialize game on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            if (!checkIfAlreadyPlayed()) {
+                document.getElementById('gameContent').style.display = 'block';
+            }
+        });
+
         function spinWheel() {
             if (isSpinning || hasSpun) return;
 
@@ -860,15 +926,20 @@
             setTimeout(() => {
                 isSpinning = false;
                 setTimeout(() => {
-                    showResult(segments[selectedIndex]);
+                    const selectedResult = segments[selectedIndex];
+                    // Save the result in localStorage
+                    localStorage.setItem('roueBienfaitsResult', JSON.stringify(selectedResult));
+                    showResult(selectedResult);
                     hasSpun = true;
                 }, 800);
             }, 5000);
         }
 
-        function showResult(result) {
-            document.getElementById('luckText').style.display = 'none';
-            document.getElementById('spinButton').textContent = '✓ Déjà joué';
+        function showResult(result, isReturningUser = false) {
+            if (!isReturningUser) {
+                document.getElementById('luckText').style.display = 'none';
+                document.getElementById('spinButton').textContent = '✓ Déjà joué';
+            }
 
             const modal = document.getElementById('modal');
             const confetti = document.getElementById('confetti');
